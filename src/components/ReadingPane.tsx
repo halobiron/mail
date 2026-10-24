@@ -20,15 +20,13 @@ function plainCopy(email: Email, ctaUrl: string) {
         return [...b.items.map((item) => `- ${item}`), ""];
       case "offer":
         return [b.label ? `${b.label}: ${b.text}` : b.text, ""];
-      case "button":
-        return [`[${b.text}]${ctaUrl ? ` ${ctaUrl}` : ""}`, ""];
       case "divider":
         return ["---", ""];
       default:
         return [b.text, ""];
     }
   });
-  return [`Tiêu đề: ${email.subject}`, "", ...lines].join("\n").trimEnd();
+  return [`Tiêu đề: ${email.subject}`, "", ...lines, `[${email.cta}]${ctaUrl ? ` ${ctaUrl}` : ""}`].join("\n");
 }
 
 const chip = "h-8 shrink-0 border border-rule-strong bg-paper px-3 text-sm font-medium hover:bg-onair-soft disabled:opacity-50";
@@ -179,7 +177,7 @@ export default function ReadingPane({
             email={email}
             selected={selected}
             onSelect={(block, focus) => {
-              setSelected(block);
+              setSelected(block < 0 ? null : block);
               if (focus) setFocusRequest((r) => ({ block, nonce: (r?.nonce ?? 0) + 1 }));
             }}
             onChange={(next) => {

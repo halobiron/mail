@@ -31,7 +31,12 @@ export default function SendTimePanel({
         <p className="p-4 text-sm text-ink-soft">Đang phân tích giờ gửi cho ngành này…</p>
       ) : (
         <div className="space-y-3 p-4">
-          <p className="text-sm font-semibold">AI suy luận theo ngành hàng suy ra từ ưu đãi, không phải số liệu đo.</p>
+          <ul aria-label="Giả định" className="flex flex-wrap gap-1.5 text-xs font-semibold">
+            <li className="bg-ink px-2 py-0.5 text-paper">Giả định</li>
+            <li className="border border-rule px-2 py-0.5">🕐 {sendTime.timezone}</li>
+            <li className="border border-rule px-2 py-0.5">🧪 Cần A/B test</li>
+            <li className="border border-rule px-2 py-0.5">🤖 AI suy luận, không phải số đo</li>
+          </ul>
           <div
             role="img"
             aria-label={`Lịch tuần, khung giờ gợi ý: ${slots
@@ -67,9 +72,7 @@ export default function SendTimePanel({
           <p className="text-sm">
             <span className="font-semibold">Nên tránh: </span>
             {sendTime.avoid}
-          </p>
-          <p className="border-t border-rule pt-2 text-xs text-ink-soft">{sendTime.note}</p>
-        </div>
+          </p>        </div>
       )}
     </section>
   );

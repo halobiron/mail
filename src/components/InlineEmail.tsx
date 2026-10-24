@@ -5,7 +5,7 @@ import { EDIT_ACTIONS } from "@/lib/edit-actions";
 import { MAX_BLOCKS, newBlock, type EditField, type Email } from "@/lib/schema";
 import type { Ask } from "./AssistField";
 
-type Part = "text" | "label" | "item";
+type Part = "text" | "label" | "item" | "cta";
 type Target = { block: number; part: Part; item: number };
 type Selection = Target & { start: number; end: number; panelTop: number; panelLeft: number };
 export type FocusRequest = { block: number; nonce: number };
@@ -23,6 +23,7 @@ const FRAME_CSS = `
 `;
 
 function read(email: Email, t: Target): string {
+  if (t.part === "cta") return email.cta;
   const b = email.blocks[t.block];
   if (!b) return "";
   if (t.part === "item") return b.items[t.item] ?? "";
@@ -30,6 +31,7 @@ function read(email: Email, t: Target): string {
 }
 
 function write(email: Email, t: Target, value: string): Email {
+  if (t.part === "cta") return { ...email, cta: value };
   return {
     ...email,
     blocks: email.blocks.map((b, i) => {
@@ -42,10 +44,11 @@ function write(email: Email, t: Target, value: string): Email {
 
 /** Trường nào của AI tương ứng với phần chữ đang chọn; quyết định luật độ dài khi chỉnh. */
 function fieldFor(email: Email, t: Target): EditField {
+  if (t.part === "cta") return "cta";
   const type = email.blocks[t.block]?.type;
   if (type === "list") return "listItem";
   if (type === "offer") return t.part === "label" ? "offerLabel" : "offerText";
-  if (type === "heading" || type === "button" || type === "note") return type;
+  if (type === "heading" || type === "note") return type;
   return "text";
 }
 
@@ -55,7 +58,7 @@ function targetOf(node: Node | null): { el: HTMLElement; target: Target } | null
   if (!el) return null;
   return {
     el,
-    target: { block: Number(el.dataset.block), part: el.dataset.part as Part, item: Number(el.dataset.item ?? 0) },
+    target: { block: el.dataset.block === "cta" ? -1 : Number(el.dataset.block), part: el.dataset.part as Part, item: Number(el.dataset.item ?? 0) },
   };
 }
 
@@ -67,6 +70,7 @@ function offsetIn(doc: Document, el: HTMLElement, node: Node, offset: number) {
 }
 
 function selectorOf(t: Target) {
+  if (t.part === "cta") return '[data-part="cta"]';
   return `[data-block="${t.block}"][data-part="${t.part}"]${t.part === "item" ? `[data-item="${t.item}"]` : ""}`;
 }
 
@@ -131,7 +135,9 @@ export default function InlineEmail({
     if (!focusRequest) return;
     const doc = frame.current?.contentDocument;
     if (!doc) return;
-    const el = doc.querySelector<HTMLElement>(`[data-block="${focusRequest.block}"][data-part]`);
+    const el = doc.querySelector<HTMLElement>(
+      focusRequest.block < 0 ? '[data-part="cta"]' : `[data-block="${focusRequest.block}"][data-part]`,
+    );
     if (el) el.focus();
     else doc.querySelector(`[data-block="${focusRequest.block}"]`)?.scrollIntoView({ block: "nearest" });
   }, [focusRequest]);
@@ -172,6 +178,11 @@ export default function InlineEmail({
     const s = doc.getSelection();
     const { email: current } = live.current;
     const t = hit.target;
+    if (t.part === "cta") {
+      // Nút CTA là một dòng duy nhất.
+      if (e.key === "Enter") e.preventDefault();
+      return;
+    }
     const block = current.blocks[t.block];
     if (!block || !s || s.rangeCount === 0) return;
     const r = s.getRangeAt(0);
@@ -282,7 +293,7 @@ export default function InlineEmail({
       const hit = targetOf(e.target as Node);
       focused.current = !!hit;
       typing.current = false;
-      if (hit) live.current.onFocusBlock(hit.target.block);
+      if (hit && hit.target.block >= 0) live.current.onFocusBlock(hit.target.block);
       syncHold();
     });
     doc.addEventListener("focusout", () =>

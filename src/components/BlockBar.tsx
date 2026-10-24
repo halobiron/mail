@@ -11,7 +11,7 @@ import {
   type HeaderStyle,
 } from "@/lib/schema";
 
-const MIN_BLOCKS = 2;
+const MIN_BLOCKS = 1;
 
 const select =
   "h-8 border border-rule-strong bg-paper px-2 text-sm font-medium hover:bg-onair-soft disabled:opacity-50";
@@ -71,6 +71,14 @@ export default function BlockBar({
             {i + 1}. {BLOCK_LABELS[b.type]}
           </button>
         ))}
+        <button
+          type="button"
+          onClick={() => onSelect(-1, true)}
+          title="Mỗi email có đúng một nút CTA, luôn nằm cuối"
+          className="h-8 shrink-0 border border-shell bg-onair px-3 text-sm font-semibold text-shell hover:bg-onair-soft"
+        >
+          Nút CTA
+        </button>
       </div>
 
       <div className="flex flex-wrap items-center justify-end gap-x-1 gap-y-1">

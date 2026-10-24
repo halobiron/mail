@@ -27,7 +27,7 @@ export const campaignInputSchema = z.object({
 });
 export type CampaignInput = z.infer<typeof campaignInputSchema>;
 
-export const BLOCK_TYPES = ["heading", "text", "list", "offer", "button", "divider", "note"] as const;
+export const BLOCK_TYPES = ["heading", "text", "list", "offer", "divider", "note"] as const;
 export type BlockType = (typeof BLOCK_TYPES)[number];
 
 export const BLOCK_LABELS: Record<BlockType, string> = {
@@ -35,7 +35,6 @@ export const BLOCK_LABELS: Record<BlockType, string> = {
   text: "Đoạn văn",
   list: "Danh sách",
   offer: "Khung ưu đãi",
-  button: "Nút",
   divider: "Đường kẻ",
   note: "Ghi chú nhỏ",
 };
@@ -54,7 +53,7 @@ export const blockSchema = z.object({
   type: z.enum(BLOCK_TYPES),
   text: z
     .string()
-    .describe("Nội dung chính: heading, text, offer (câu ưu đãi nổi bật), button (chữ trên nút, tối đa 5 từ), note. Chuỗi rỗng với list và divider"),
+    .describe("Nội dung chính: heading, text, offer (câu ưu đãi nổi bật), note. Chuỗi rỗng với list và divider"),
   label: z.string().describe("Chỉ cho offer: nhãn nhỏ phía trên khung. Chuỗi rỗng với các loại khác"),
   items: z.array(z.string()).describe("Chỉ cho list: các ý ngắn. Mảng rỗng với các loại khác"),
 });
@@ -65,14 +64,24 @@ export const emailSchema = z.object({
   subject: z.string().describe("Tiêu đề email, tối đa khoảng 60 ký tự"),
   preheader: z.string().describe("Dòng xem trước hiển thị cạnh tiêu đề trong hộp thư"),
   header: z.enum(Object.keys(HEADER_STYLES) as [HeaderStyle, ...HeaderStyle[]]).describe("Kiểu đầu thư"),
-  blocks: z.array(blockSchema).min(2).max(MAX_BLOCKS).describe("Các khối nội dung theo thứ tự từ trên xuống"),
+  blocks: z.array(blockSchema).min(1).max(MAX_BLOCKS).describe("Các khối nội dung theo thứ tự từ trên xuống, không gồm nút"),
+  cta: z.string().describe("Chữ trên nút kêu gọi hành động duy nhất của email, tối đa 5 từ"),
 });
 export type Email = z.infer<typeof emailSchema>;
 
-/** Đọc email ở định dạng cũ (lời chào, đoạn, một nút) từ bản nháp đã lưu và đưa về dạng khối. */
+/** Đọc email ở các định dạng cũ từ bản nháp đã lưu: (lời chào, đoạn, một nút) hoặc khối có chứa khối nút. */
 export function migrateEmail(raw: unknown): Email {
   const e = raw as Record<string, unknown>;
-  if (Array.isArray(e.blocks)) return e as unknown as Email;
+  if (Array.isArray(e.blocks)) {
+    const all = e.blocks as (Block | { type: "button"; text: string })[];
+    const kept = all.filter((b) => b.type !== "button") as Block[];
+    const button = all.find((b) => b.type === "button");
+    return {
+      ...(e as unknown as Email),
+      blocks: kept.length ? kept : [{ type: "text", text: "", label: "", items: [] }],
+      cta: typeof e.cta === "string" ? e.cta : (button?.text ?? ""),
+    };
+  }
   const body = Array.isArray(e.body) ? (e.body as string[]) : [];
   const block = (type: BlockType, text: string): Block => ({ type, text, label: "", items: [] });
   return {
@@ -80,11 +89,8 @@ export function migrateEmail(raw: unknown): Email {
     subject: String(e.subject ?? ""),
     preheader: String(e.preheader ?? ""),
     header: "banner",
-    blocks: [
-      ...(e.greeting ? [block("text", String(e.greeting))] : []),
-      ...body.map((p) => block("text", p)),
-      block("button", String(e.ctaLabel ?? "")),
-    ],
+    blocks: [...(e.greeting ? [block("text", String(e.greeting))] : []), ...body.map((p) => block("text", p))],
+    cta: String(e.ctaLabel ?? ""),
   };
 }
 
@@ -99,8 +105,6 @@ export function newBlock(type: BlockType): Block {
       return { ...base, items: ["Ý thứ nhất", "Ý thứ hai"] };
     case "offer":
       return { ...base, label: "Ưu đãi", text: "Nội dung ưu đãi" };
-    case "button":
-      return { ...base, text: "Xem ngay" };
     case "note":
       return { ...base, text: "Ghi chú nhỏ" };
     default:
@@ -126,8 +130,7 @@ export const sendTimeSchema = z.object({
     .min(1)
     .max(3),
   avoid: z.string().describe("Thời điểm nên tránh gửi và lý do, tối đa 20 từ"),
-  note: z.string().describe("Giả định đã dùng (múi giờ, thị trường) và lưu ý cần A/B test, tối đa 30 từ"),
-});
+  timezone: z.string().describe("Múi giờ đã giả định, dạng ngắn như 'UTC+7 (Việt Nam)', tối đa 4 từ"),});
 export type SendTime = z.infer<typeof sendTimeSchema>;
 
 export const generateRequestSchema = campaignInputSchema;
@@ -140,7 +143,7 @@ export const rewriteRequestSchema = z
   })
   .refine((v) => v.tone || v.instruction, { message: "Cần chọn tông hoặc nhập yêu cầu chỉnh sửa" });
 
-export const EDIT_FIELDS = ["subject", "preheader", "heading", "text", "listItem", "offerLabel", "offerText", "button", "note"] as const;
+export const EDIT_FIELDS = ["subject", "preheader", "heading", "text", "listItem", "offerLabel", "offerText", "cta", "note"] as const;
 export type EditField = (typeof EDIT_FIELDS)[number];
 
 export const editRequestSchema = z.object({

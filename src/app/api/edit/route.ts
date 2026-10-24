@@ -11,7 +11,7 @@ const FIELD_RULES: Record<EditField, { label: string; rule: string; singleLine: 
   listItem: { label: "một ý trong danh sách", rule: "Một ý ngắn, một dòng, không có ký hiệu đầu dòng.", singleLine: true },
   offerLabel: { label: "nhãn nhỏ phía trên khung ưu đãi", rule: "Vài từ, một dòng.", singleLine: true },
   offerText: { label: "câu ưu đãi nổi bật trong khung", rule: "Một câu ngắn, một dòng, chỉ dùng thông tin ưu đãi đã có.", singleLine: true },
-  button: { label: "chữ trên nút kêu gọi hành động", rule: "Tối đa 5 từ, một dòng.", singleLine: true },
+  cta: { label: "chữ trên nút kêu gọi hành động", rule: "Tối đa 5 từ, một dòng.", singleLine: true },
   note: { label: "ghi chú nhỏ cuối email", rule: "Ngắn, chỉ nhắc điều kiện hoặc thời hạn đã có trong ưu đãi.", singleLine: true },
 };
 

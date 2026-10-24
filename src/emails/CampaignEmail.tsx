@@ -27,7 +27,7 @@ const MUTED = "#71717a";
  * Các thuộc tính data-block / data-part / data-item chỉ để giao diện nhận ra phần nào sửa được;
  * chúng không ảnh hưởng cách email hiển thị.
  */
-function renderBlock(block: Block, i: number, brandColor: string, ctaUrl: string) {
+function renderBlock(block: Block, i: number, brandColor: string) {
   switch (block.type) {
     case "heading":
       return (
@@ -66,29 +66,6 @@ function renderBlock(block: Block, i: number, brandColor: string, ctaUrl: string
           <Text data-block={i} data-part="text" style={{ margin: 0, fontSize: 20, lineHeight: "28px", fontWeight: 700, color: INK }}>
             {block.text}
           </Text>
-        </Section>
-      );
-    case "button":
-      return (
-        <Section key={i} style={{ margin: "0 0 16px" }}>
-          <Button
-            href={ctaUrl || "#"}
-            style={{
-              backgroundColor: brandColor,
-              color: "#ffffff",
-              fontSize: 16,
-              fontWeight: 600,
-              padding: "12px 24px",
-              borderRadius: 6,
-              textDecoration: "none",
-              boxSizing: "border-box",
-              display: "inline-block",
-            }}
-          >
-            <span data-block={i} data-part="text">
-              {block.text}
-            </span>
-          </Button>
         </Section>
       );
     case "divider":
@@ -137,7 +114,29 @@ export default function CampaignEmail({ brand, brandColor, ctaUrl, email }: Camp
       <Body style={{ backgroundColor: "#f4f4f5", margin: 0, padding: "24px 0", fontFamily: "Arial, Helvetica, sans-serif" }}>
         <Container style={{ maxWidth: 600, backgroundColor: "#ffffff", borderRadius: 8, overflow: "hidden" }}>
           <Header brand={brand} brandColor={brandColor} style={email.header} />
-          <Section style={{ padding: "28px 32px 12px" }}>{email.blocks.map((b, i) => renderBlock(b, i, brandColor, ctaUrl))}</Section>
+          <Section style={{ padding: "28px 32px 12px" }}>
+            {email.blocks.map((b, i) => renderBlock(b, i, brandColor))}
+            <Section style={{ margin: "0 0 16px" }}>
+              <Button
+                href={ctaUrl || "#"}
+                style={{
+                  backgroundColor: brandColor,
+                  color: "#ffffff",
+                  fontSize: 16,
+                  fontWeight: 600,
+                  padding: "12px 24px",
+                  borderRadius: 6,
+                  textDecoration: "none",
+                  boxSizing: "border-box",
+                  display: "inline-block",
+                }}
+              >
+                <span data-block="cta" data-part="cta">
+                  {email.cta}
+                </span>
+              </Button>
+            </Section>
+          </Section>
           <Hr style={{ borderColor: "#e4e4e7", margin: 0 }} />
           <Section style={{ padding: "16px 32px" }}>
             <Text style={{ fontSize: 12, color: MUTED, margin: 0 }}>{brand}</Text>

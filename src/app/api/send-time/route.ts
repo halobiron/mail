@@ -20,8 +20,8 @@ export async function POST(req: Request) {
           ? "Dùng đúng ngành hàng người dùng nhập (điền vào trường industry) và suy ra nhóm khách nhận email từ đó."
           : "Người dùng không nhập ngành hàng: trước hết suy ra ngành và nhóm khách nhận email từ thương hiệu và nội dung ưu đãi (điền vào trường industry).",
         "Sau đó gợi ý 1-3 thời điểm gửi email tốt nhất (ngày trong tuần + khung giờ), dựa trên thói quen mở email phổ biến của nhóm khách đó. Nếu ưu đãi có hạn chót hoặc gắn với một dịp cụ thể (bữa trưa, cuối tuần, ngày lương), ưu tiên khung giờ phù hợp với điều đó.",
-        "Nếu ngành không do người dùng nhập và không đủ căn cứ để xác định ngành, nêu rõ trong trường note và chọn khung giờ an toàn cho đa số khách hàng.",
-        "Người dùng chưa cung cấp múi giờ hay thị trường: hãy nêu rõ giả định trong trường note và nhắc rằng đây là gợi ý cần kiểm chứng bằng A/B test, không phải số liệu đo đạc.",
+        "Nếu ngành không do người dùng nhập và không đủ căn cứ để xác định ngành, chọn khung giờ an toàn cho đa số khách hàng.",
+        "Người dùng chưa cung cấp múi giờ hay thị trường: hãy giả định UTC+7 (Việt Nam) và điền vào trường timezone.",
       ].join("\n"),
     });
     return NextResponse.json(output);

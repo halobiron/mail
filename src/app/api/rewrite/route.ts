@@ -27,7 +27,7 @@ export async function POST(req: Request) {
         JSON.stringify(email),
         "",
         `Viết lại email này: ${asks.join(", đồng thời ")}.`,
-        `Giữ nguyên thông tin ưu đãi. Giữ hướng tiếp cận "${email.angle}" trừ khi yêu cầu nói khác. Phần nào yêu cầu không đụng tới thì giữ nguyên từng chữ. Giữ nguyên các khối và thứ tự khối; chỉ thêm, bớt, đổi loại hoặc đổi thứ tự khối khi yêu cầu cần điều đó (ví dụ "thêm danh sách ưu điểm").`,
+        `Giữ nguyên thông tin ưu đãi. Giữ hướng tiếp cận "${email.angle}" trừ khi yêu cầu nói khác. Phần nào yêu cầu không đụng tới thì giữ nguyên từng chữ. Mỗi email luôn có đúng một nút kêu gọi hành động (cta) và nút không phải là khối. Giữ nguyên các khối và thứ tự khối; chỉ thêm, bớt, đổi loại hoặc đổi thứ tự khối khi yêu cầu cần điều đó (ví dụ "thêm danh sách ưu điểm").`,
       ].join("\n"),
     });
     return NextResponse.json(output);
