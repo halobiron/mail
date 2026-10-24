@@ -1,0 +1,180 @@
+import { z } from "zod";
+
+export const GOALS = {
+  launch: "Ra mắt sản phẩm",
+  promotion: "Khuyến mãi",
+  nurture: "Chăm sóc khách hàng",
+} as const;
+export type Goal = keyof typeof GOALS;
+
+export const TONES = {
+  formal: "Trang trọng",
+  humorous: "Hài hước",
+  urgent: "Khẩn cấp",
+} as const;
+export type Tone = keyof typeof TONES;
+
+const goalEnum = z.enum(Object.keys(GOALS) as [Goal, ...Goal[]]);
+const toneEnum = z.enum(Object.keys(TONES) as [Tone, ...Tone[]]);
+
+export const campaignInputSchema = z.object({
+  goal: goalEnum,
+  brand: z.string().trim().min(1, "Nhập tên thương hiệu").max(80),
+  industry: z.string().trim().max(80).optional().default(""),
+  offer: z.string().trim().min(1, "Nhập nội dung ưu đãi").max(1000),
+  ctaUrl: z.string().trim().max(500).optional().default(""),
+  brandColor: z.string().regex(/^#[0-9a-fA-F]{6}$/),
+});
+export type CampaignInput = z.infer<typeof campaignInputSchema>;
+
+export const BLOCK_TYPES = ["heading", "text", "list", "offer", "button", "divider", "note"] as const;
+export type BlockType = (typeof BLOCK_TYPES)[number];
+
+export const BLOCK_LABELS: Record<BlockType, string> = {
+  heading: "Tiêu đề",
+  text: "Đoạn văn",
+  list: "Danh sách",
+  offer: "Khung ưu đãi",
+  button: "Nút",
+  divider: "Đường kẻ",
+  note: "Ghi chú nhỏ",
+};
+
+export const HEADER_STYLES = {
+  banner: "Thanh màu",
+  plain: "Đơn giản",
+  center: "Căn giữa",
+} as const;
+export type HeaderStyle = keyof typeof HEADER_STYLES;
+
+export const MAX_BLOCKS = 12;
+
+/** Phẳng và đủ trường cho mọi loại khối để AI trả về ổn định; trường không dùng thì để rỗng. */
+export const blockSchema = z.object({
+  type: z.enum(BLOCK_TYPES),
+  text: z
+    .string()
+    .describe("Nội dung chính: heading, text, offer (câu ưu đãi nổi bật), button (chữ trên nút, tối đa 5 từ), note. Chuỗi rỗng với list và divider"),
+  label: z.string().describe("Chỉ cho offer: nhãn nhỏ phía trên khung. Chuỗi rỗng với các loại khác"),
+  items: z.array(z.string()).describe("Chỉ cho list: các ý ngắn. Mảng rỗng với các loại khác"),
+});
+export type Block = z.infer<typeof blockSchema>;
+
+export const emailSchema = z.object({
+  angle: z.string().describe("Hướng tiếp cận của mẫu, tối đa 6 từ"),
+  subject: z.string().describe("Tiêu đề email, tối đa khoảng 60 ký tự"),
+  preheader: z.string().describe("Dòng xem trước hiển thị cạnh tiêu đề trong hộp thư"),
+  header: z.enum(Object.keys(HEADER_STYLES) as [HeaderStyle, ...HeaderStyle[]]).describe("Kiểu đầu thư"),
+  blocks: z.array(blockSchema).min(2).max(MAX_BLOCKS).describe("Các khối nội dung theo thứ tự từ trên xuống"),
+});
+export type Email = z.infer<typeof emailSchema>;
+
+/** Đọc email ở định dạng cũ (lời chào, đoạn, một nút) từ bản nháp đã lưu và đưa về dạng khối. */
+export function migrateEmail(raw: unknown): Email {
+  const e = raw as Record<string, unknown>;
+  if (Array.isArray(e.blocks)) return e as unknown as Email;
+  const body = Array.isArray(e.body) ? (e.body as string[]) : [];
+  const block = (type: BlockType, text: string): Block => ({ type, text, label: "", items: [] });
+  return {
+    angle: String(e.angle ?? ""),
+    subject: String(e.subject ?? ""),
+    preheader: String(e.preheader ?? ""),
+    header: "banner",
+    blocks: [
+      ...(e.greeting ? [block("text", String(e.greeting))] : []),
+      ...body.map((p) => block("text", p)),
+      block("button", String(e.ctaLabel ?? "")),
+    ],
+  };
+}
+
+export function newBlock(type: BlockType): Block {
+  const base = { type, text: "", label: "", items: [] as string[] };
+  switch (type) {
+    case "heading":
+      return { ...base, text: "Tiêu đề mới" };
+    case "text":
+      return { ...base, text: "Đoạn văn mới" };
+    case "list":
+      return { ...base, items: ["Ý thứ nhất", "Ý thứ hai"] };
+    case "offer":
+      return { ...base, label: "Ưu đãi", text: "Nội dung ưu đãi" };
+    case "button":
+      return { ...base, text: "Xem ngay" };
+    case "note":
+      return { ...base, text: "Ghi chú nhỏ" };
+    default:
+      return base;
+  }
+}
+
+export const generateOutputSchema = z.object({
+  emails: z.array(emailSchema).length(3),
+});
+
+export const sendTimeSchema = z.object({
+  industry: z.string().describe("Ngành hàng: giữ nguyên ngành người dùng đã nhập, nếu không có thì suy ra từ thương hiệu và ưu đãi, tối đa 4 từ"),
+  slots: z
+    .array(
+      z.object({
+        dayOfWeek: z.number().int().min(1).max(7).describe("Thứ trong tuần: 1 là Thứ Hai, 7 là Chủ nhật"),
+        startHour: z.number().int().min(0).max(23).describe("Giờ bắt đầu, số nguyên 0-23"),
+        endHour: z.number().int().min(1).max(24).describe("Giờ kết thúc, số nguyên lớn hơn startHour"),
+        reason: z.string().describe("Lý do một câu, tối đa 20 từ, gắn với hành vi khách hàng của ngành"),
+      }),
+    )
+    .min(1)
+    .max(3),
+  avoid: z.string().describe("Thời điểm nên tránh gửi và lý do, tối đa 20 từ"),
+  note: z.string().describe("Giả định đã dùng (múi giờ, thị trường) và lưu ý cần A/B test, tối đa 30 từ"),
+});
+export type SendTime = z.infer<typeof sendTimeSchema>;
+
+export const generateRequestSchema = campaignInputSchema;
+export const rewriteRequestSchema = z
+  .object({
+    input: campaignInputSchema,
+    email: emailSchema,
+    tone: toneEnum.optional(),
+    instruction: z.string().trim().min(1).max(500).optional(),
+  })
+  .refine((v) => v.tone || v.instruction, { message: "Cần chọn tông hoặc nhập yêu cầu chỉnh sửa" });
+
+export const EDIT_FIELDS = ["subject", "preheader", "heading", "text", "listItem", "offerLabel", "offerText", "button", "note"] as const;
+export type EditField = (typeof EDIT_FIELDS)[number];
+
+export const editRequestSchema = z.object({
+  input: campaignInputSchema,
+  email: emailSchema,
+  field: z.enum(EDIT_FIELDS),
+  /** Đoạn cần sửa: phần được bôi đen, hoặc cả trường nếu không bôi đen. */
+  text: z.string().min(1, "Chưa có nội dung để chỉnh").max(2000),
+  /** Cả nội dung của trường chứa đoạn đó, để AI hiểu ngữ cảnh. */
+  fieldText: z.string().max(2000),
+  instruction: z.string().trim().min(1, "Nhập yêu cầu chỉnh sửa").max(300),
+});
+export const editOutputSchema = z.object({
+  text: z.string().describe("Chỉ phần nội dung thay thế, không kèm giải thích hay dấu ngoặc kép"),
+});
+export const sendTimeRequestSchema = z.object({
+  brand: campaignInputSchema.shape.brand,
+  industry: campaignInputSchema.shape.industry,
+  offer: campaignInputSchema.shape.offer,
+  goal: goalEnum,
+});
+export const renderRequestSchema = z.object({
+  input: campaignInputSchema,
+  email: emailSchema,
+});
+
+export type CampaignResult = {
+  emails: Email[];
+  sendTime: SendTime | null;
+};
+
+export type Draft = {
+  id: string;
+  savedAt: string;
+  input: CampaignInput;
+  result: CampaignResult;
+};
