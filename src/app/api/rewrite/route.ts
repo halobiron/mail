@@ -9,6 +9,8 @@ import {
 } from "@/lib/ai";
 import { emailSchema, rewriteRequestSchema } from "@/lib/schema";
 
+export const maxDuration = 60;
+
 export async function POST(req: Request) {
   try {
     const { input, email, tone, instruction } = rewriteRequestSchema.parse(await req.json());

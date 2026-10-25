@@ -206,7 +206,10 @@ export default function Studio() {
         <section className={`${pane("inbox")} scroll min-h-0 flex-col overflow-y-auto border-r border-rule bg-sheet`}>
           {error && (
             <p role="alert" className="border-b border-danger/40 bg-[#fdecee] p-4 text-sm text-danger">
-              {error}
+              {error}{" "}
+              <button type="button" onClick={generate} disabled={loading} className="font-semibold underline disabled:opacity-50">
+                Thử lại
+              </button>
             </p>
           )}
           <Inbox

@@ -3,6 +3,8 @@ import { NextResponse } from "next/server";
 import { SYSTEM_RULES, errorResponse, getModel } from "@/lib/ai";
 import { GOALS, sendTimeRequestSchema, sendTimeSchema } from "@/lib/schema";
 
+export const maxDuration = 60;
+
 export async function POST(req: Request) {
   try {
     const { brand, industry, offer, goal } = sendTimeRequestSchema.parse(await req.json());

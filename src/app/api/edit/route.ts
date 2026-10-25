@@ -15,6 +15,8 @@ const FIELD_RULES: Record<EditField, { label: string; rule: string; singleLine: 
   note: { label: "ghi chú nhỏ cuối email", rule: "Ngắn, chỉ nhắc điều kiện hoặc thời hạn đã có trong ưu đãi.", singleLine: true },
 };
 
+export const maxDuration = 60;
+
 export async function POST(req: Request) {
   try {
     const { input, email, field, text, fieldText, instruction } = editRequestSchema.parse(await req.json());

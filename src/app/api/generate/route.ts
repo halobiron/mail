@@ -8,6 +8,8 @@ import {
 } from "@/lib/ai";
 import { generateOutputSchema, generateRequestSchema } from "@/lib/schema";
 
+export const maxDuration = 60;
+
 export async function POST(req: Request) {
   try {
     const input = generateRequestSchema.parse(await req.json());

@@ -31,8 +31,10 @@ export function errorResponse(error: unknown) {
     );
   }
   console.error(error);
-  const message = error instanceof Error ? error.message : "Lỗi không xác định";
-  return NextResponse.json({ error: message, code: "ai" }, { status: 502 });
+  return NextResponse.json(
+    { error: "Dịch vụ AI đang gặp sự cố hoặc phản hồi không hợp lệ. Vui lòng thử lại sau ít phút.", code: "ai" },
+    { status: 502 },
+  );
 }
 
 export function describeCampaign(input: CampaignInput) {
