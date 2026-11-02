@@ -86,31 +86,6 @@ export const emailSchema = z.object({
 });
 export type Email = z.infer<typeof emailSchema>;
 
-/** Đọc email ở các định dạng cũ từ bản nháp đã lưu: (lời chào, đoạn, một nút) hoặc khối có chứa khối nút. */
-export function migrateEmail(raw: unknown): Email {
-  const e = raw as Record<string, unknown>;
-  if (Array.isArray(e.blocks)) {
-    const all = e.blocks as (Block | { type: "button"; text: string })[];
-    const kept = all.filter((b) => b.type !== "button") as Block[];
-    const button = all.find((b) => b.type === "button");
-    return {
-      ...(e as unknown as Email),
-      blocks: kept.length ? kept : [{ type: "text", text: "", label: "", items: [] }],
-      cta: typeof e.cta === "string" ? e.cta : (button?.text ?? ""),
-    };
-  }
-  const body = Array.isArray(e.body) ? (e.body as string[]) : [];
-  const block = (type: BlockType, text: string): Block => ({ type, text, label: "", items: [] });
-  return {
-    angle: String(e.angle ?? ""),
-    subject: String(e.subject ?? ""),
-    preheader: String(e.preheader ?? ""),
-    header: "banner",
-    blocks: [...(e.greeting ? [block("text", String(e.greeting))] : []), ...body.map((p) => block("text", p))],
-    cta: String(e.ctaLabel ?? ""),
-  };
-}
-
 export function newBlock(type: BlockType): Block {
   const base = { type, text: "", label: "", items: [] as string[] };
   switch (type) {
@@ -189,11 +164,4 @@ export const renderRequestSchema = z.object({
 export type CampaignResult = {
   emails: Email[];
   sendTime: SendTime | null;
-};
-
-export type Draft = {
-  id: string;
-  savedAt: string;
-  input: CampaignInput;
-  result: CampaignResult;
 };

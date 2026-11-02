@@ -17,6 +17,6 @@ Chạy ngày 02/11/2026 trên `next dev` (localhost), gọi trực tiếp API b�
 
 ## Ghi chú
 
-- Mới thử qua API, chưa thử qua giao diện (copy, viết lại theo tông, lưu nháp) và chưa thử trên mobile.
+- Mới thử qua API, chưa thử qua giao diện (copy, viết lại theo tông) và chưa thử trên mobile.
 - Mới thử `/api/generate` và `/api/send-time`; chưa thử `/api/rewrite`, `/api/edit`, `/api/render`.
 - Thời gian phản hồi của AI khoảng 25–35 giây cho mỗi lần tạo 3 mẫu.

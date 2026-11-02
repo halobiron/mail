@@ -2,13 +2,10 @@
 
 import { useState } from "react";
 import { postJson } from "@/lib/api";
-import { saveDrafts, useDrafts } from "@/lib/drafts";
 import {
   GOALS,
-  migrateEmail,
   type CampaignInput,
   type CampaignResult,
-  type Draft,
   type Email,
   type SendTime,
   type Tone,
@@ -42,14 +39,6 @@ export default function Studio() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [sendTimeError, setSendTimeError] = useState<string | null>(null);
-  const drafts = useDrafts();
-  const [draftsOpen, setDraftsOpen] = useState(false);
-  const [notice, setNotice] = useState<string | null>(null);
-
-  function flash(text: string) {
-    setNotice(text);
-    setTimeout(() => setNotice((n) => (n === text ? null : n)), 3500);
-  }
 
   function reset(input: CampaignInput, next: CampaignResult) {
     setGenerated(input);
@@ -67,7 +56,6 @@ export default function Studio() {
     setLoading(true);
     setError(null);
     setSendTimeError(null);
-    setNotice(null);
     setView("inbox");
     const sendTimeReq = postJson<SendTime>("/api/send-time", { brand: input.brand, industry: input.industry, offer: input.offer, goal: input.goal });
     try {
@@ -112,26 +100,6 @@ export default function Studio() {
     setResult((r) => (r ? { ...r, emails: r.emails.map((e, i) => (i === index ? prev.email : e)) } : r));
   }
 
-  function persist(next: Draft[]) {
-    if (saveDrafts(next)) return true;
-    flash("Không lưu được vào localStorage của trình duyệt.");
-    return false;
-  }
-
-  function saveDraft() {
-    if (!result || !generated) return;
-    const draft: Draft = { id: crypto.randomUUID(), savedAt: new Date().toISOString(), input: generated, result };
-    if (persist([draft, ...drafts])) flash("Đã lưu bản nháp");
-  }
-
-  function openDraft(d: Draft) {
-    const input = { ...EMPTY_INPUT, ...d.input };
-    setForm(input);
-    reset(input, { ...d.result, emails: d.result.emails.map(migrateEmail) });
-    setDraftsOpen(false);
-    setNotice(null);
-  }
-
   const tabs: { id: View; label: string }[] = [
     { id: "form", label: "Chiến dịch" },
     { id: "inbox", label: "Hộp thư" },
@@ -149,51 +117,6 @@ export default function Studio() {
           <p className="hidden truncate text-sm text-white/80 md:block">
             {generated.brand} · {GOALS[generated.goal]}
           </p>
-        )}
-        <div className="ml-auto flex shrink-0 items-center gap-2 sm:gap-3">
-          {result && (
-            <button onClick={saveDraft} className="h-9 whitespace-nowrap border border-white/50 px-3 text-sm font-semibold hover:bg-white/10">
-              Lưu<span className="hidden sm:inline"> bản</span> nháp
-            </button>
-          )}
-          <button
-            aria-expanded={draftsOpen}
-            onClick={() => setDraftsOpen((o) => !o)}
-            className="h-9 whitespace-nowrap bg-white/10 px-3 text-sm font-semibold hover:bg-white/20"
-          >
-            Bản nháp ({drafts.length})
-          </button>
-        </div>
-
-        {draftsOpen && (
-          <>
-            <button aria-label="Đóng danh sách bản nháp" className="fixed inset-0 z-10 cursor-default" onClick={() => setDraftsOpen(false)} />
-            <div className="absolute right-4 top-[52px] z-20 w-[340px] max-w-[calc(100vw-2rem)] border border-rule-strong bg-paper text-ink shadow-lg">
-              <h2 className="border-b border-rule bg-sheet px-4 py-2 font-channel text-base font-bold">Bản nháp trên trình duyệt này</h2>
-              {drafts.length === 0 ? (
-                <p className="p-4 text-sm text-ink-soft">Chưa có bản nháp. Tạo email rồi bấm Lưu bản nháp.</p>
-              ) : (
-                <ul className="scroll max-h-[60dvh] overflow-y-auto">
-                  {drafts.map((d) => (
-                    <li key={d.id} className="grid grid-cols-[1fr_auto] items-center border-b border-rule last:border-b-0">
-                      <button className="min-w-0 px-4 py-3 text-left hover:bg-onair-soft" onClick={() => openDraft(d)}>
-                        <span className="block truncate text-sm font-semibold">{d.input.brand}</span>
-                        <span className="block truncate text-xs text-ink-soft">
-                          {GOALS[d.input.goal]} · {new Date(d.savedAt).toLocaleString("vi-VN")}
-                        </span>
-                      </button>
-                      <button
-                        className="px-4 py-3 text-xs font-semibold text-danger hover:underline"
-                        onClick={() => persist(drafts.filter((x) => x.id !== d.id))}
-                      >
-                        Xoá
-                      </button>
-                    </li>
-                  ))}
-                </ul>
-              )}
-            </div>
-          </>
         )}
       </header>
 
@@ -249,12 +172,6 @@ export default function Studio() {
           )}
         </main>
       </div>
-
-      {notice && (
-        <p role="status" className="fixed bottom-16 left-1/2 z-30 max-w-[90vw] -translate-x-1/2 bg-shell px-4 py-2 text-sm font-semibold text-white shadow-lg lg:bottom-6">
-          {notice}
-        </p>
-      )}
 
       <nav aria-label="Chuyển khu vực" className="grid grid-cols-3 border-t border-rule-strong bg-paper lg:hidden">
         {tabs.map((t) => (

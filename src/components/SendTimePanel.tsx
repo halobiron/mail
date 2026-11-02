@@ -13,10 +13,10 @@ export default function SendTimePanel({
   error: string | null;
 }) {
   const slots = sendTime?.slots ?? [];
-  // Mỗi hàng là một khung 2 giờ để bảng gọn trong một màn hình.
-  const from = Math.floor(Math.min(6, ...slots.map((s) => s.startHour)) / 2) * 2;
-  const to = Math.max(22, ...slots.map((s) => s.endHour));
-  const bands = Array.from({ length: Math.ceil((to - from) / 2) }, (_, i) => from + i * 2);
+  // Mỗi hàng một giờ, ghi giờ ở mọi hàng; chỉ lấy khoảng giờ có khung gợi ý, chừa một giờ đệm mỗi đầu.
+  const from = Math.max(0, Math.min(...slots.map((s) => s.startHour)) - 1);
+  const to = Math.min(24, Math.max(...slots.map((s) => s.endHour)) + 1);
+  const hours = Array.from({ length: to - from }, (_, i) => from + i);
 
   return (
     <section aria-labelledby="send-time-title" className="bg-paper">
@@ -51,7 +51,7 @@ export default function SendTimePanel({
                 {d}
               </div>
             ))}
-            {bands.map((h) => (
+            {hours.map((h) => (
               <Row key={h} hour={h} slots={slots} />
             ))}
           </div>
@@ -78,10 +78,10 @@ export default function SendTimePanel({
 function Row({ hour, slots }: { hour: number; slots: SendTime["slots"] }) {
   return (
     <>
-      <div className="bg-paper pr-1 text-right font-channel text-xs font-semibold leading-5 text-ink-soft">{hour}h</div>
+      <div className="bg-paper pr-1 text-right font-channel text-xs font-semibold leading-[14px] text-ink-soft">{hour}h</div>
       {DAYS.map((_, d) => {
-        const on = slots.some((s) => s.dayOfWeek === d + 1 && hour < s.endHour && hour + 2 > s.startHour);
-        return <div key={d} className={`h-5 ${on ? "bg-onair" : "bg-paper"}`} />;
+        const on = slots.some((s) => s.dayOfWeek === d + 1 && hour >= s.startHour && hour < s.endHour);
+        return <div key={d} className={`h-3.5 ${on ? "bg-onair" : "bg-paper"}`} />;
       })}
     </>
   );

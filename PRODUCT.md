@@ -17,7 +17,7 @@ Soạn email chiến dịch tự động: nhập mục tiêu, thương hiệu, n
 ## Capabilities and Constraints
 
 - Mục tiêu chiến dịch: ra mắt sản phẩm, khuyến mãi, chăm sóc khách hàng. Tông viết lại: trang trọng, hài hước, khẩn cấp.
-- Bản nháp lưu bằng localStorage. Không có cơ sở dữ liệu, danh sách khách hàng hay gửi email.
+- Không lưu trữ dữ liệu. Không có cơ sở dữ liệu, danh sách khách hàng hay gửi email.
 - AI chạy qua Vercel AI Gateway, model lấy từ biến môi trường, chưa chốt model.
 - Giao diện tiếng Việt. Người dùng không đặt thêm ràng buộc về thiết bị hay chế độ sáng/tối.
 - Gợi ý thời điểm gửi là suy luận của AI, không phải số liệu đo; phải nói rõ điều đó.
@@ -34,7 +34,7 @@ Không có người dùng thật, số liệu hay phản hồi. Chỉ có phản
 
 - Một màn hình làm việc: thấy form, kết quả và xem trước cùng lúc, không phải cuộn dọc dài để tìm kết quả.
 - Bám đề bài: form nhập có 3 trường bắt buộc theo đề (mục tiêu, thương hiệu, ưu đãi) và một ô ngành hàng không bắt buộc, bỏ trống thì AI suy ngành từ ưu đãi; tông viết là nút "Viết lại theo tông khác" sau khi đã có 3 mẫu, không phải ô trong form.
-- Hành động chính (copy, viết lại, lưu nháp) phải nổi bật và tên gọi rõ nghĩa.
+- Hành động chính (copy, viết lại) phải nổi bật và tên gọi rõ nghĩa.
 - Xem trước phải giống hộp thư thật; không bịa dữ liệu hay số liệu.
 
 ## Feedback on the incumbent UI (evidence, not direction)

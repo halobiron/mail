@@ -1,6 +1,6 @@
 # Email Campaign Studio
 
-Next.js + TypeScript + React Email + Vercel AI SDK. Nhập mục tiêu, thương hiệu, ngành hàng, ưu đãi → 3 mẫu email (subject + nội dung + CTA), preview kiểu hộp thư, copy, viết lại theo tông, gợi ý thời điểm gửi. Bản nháp lưu bằng localStorage.
+Next.js + TypeScript + React Email + Vercel AI SDK. Nhập mục tiêu, thương hiệu, ngành hàng, ưu đãi → 3 mẫu email (subject + nội dung + CTA), preview kiểu hộp thư, copy, viết lại theo tông, gợi ý thời điểm gửi.
 
 ## Chạy
 

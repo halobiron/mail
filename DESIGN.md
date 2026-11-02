@@ -173,7 +173,7 @@ Dưới lg chỉ một khu vực hiện cùng lúc (Chiến dịch / Hộp thư 
 
 ## Elevation & Depth
 
-Phẳng theo mặc định. Chiều sâu đến từ hai tông nền (sheet cho khung và tiêu đề panel, paper cho nội dung) cùng đường kẻ 1px. Bóng chỉ xuất hiện ở hai lớp nổi tạm thời: danh sách bản nháp thả xuống và thông báo nổi (cả hai dùng `shadow-lg` mặc định của Tailwind).
+Phẳng theo mặc định. Chiều sâu đến từ hai tông nền (sheet cho khung và tiêu đề panel, paper cho nội dung) cùng đường kẻ 1px. Hầu như không có bóng đổ; nếu cần lớp nổi tạm thời thì dùng `shadow-lg` mặc định của Tailwind.
 
 ### Named Rules
 **The Rule-Not-Shadow Rule.** Phân tách vùng bằng đường kẻ `rule`, không bằng bóng. Bóng chỉ cho lớp nổi tạm thời.
@@ -189,7 +189,6 @@ Góc vuông hoàn toàn: không có border-radius ở bất kỳ thành phần n
 - **Primary (navy):** nền #101b3d, chữ trắng, hover #1c2c5e. Dùng cho "Copy nội dung".
 - **Outline:** nền trắng, viền và chữ navy, hover nền vàng nhạt. Dùng cho "Copy HTML".
 - **Submit:** cao 44px, nền vàng, chữ navy, hover `brightness-95`, đang tải mờ 60%. Chỉ một nút này trên màn hình.
-- **Header:** nút viền trắng 50% và nút nền trắng 10% trên vỏ navy, cao 36px.
 - **Disabled:** mờ 50% và con trỏ not-allowed.
 
 ### Segmented Choice (mục tiêu)
@@ -209,9 +208,6 @@ Bảng 7 cột ngày (T2..CN) và các hàng 2 giờ, ô cao 20px, khe 1px nền
 
 ### Navigation
 Mobile: thanh tab 3 cột, cao 48px, đang mở nền navy chữ trắng, còn lại chữ navy hover vàng nhạt. Desktop không có điều hướng (ba cột luôn hiện).
-
-### Drafts Popover
-Khung 340px, viền `rule-strong`, nền trắng, tiêu đề panel trên nền sheet, mỗi mục là dòng có nút Xoá màu đỏ.
 
 ## Do's and Don'ts
 
