@@ -69,10 +69,7 @@ export default function SendTimePanel({
               </li>
             ))}
           </ul>
-          <p className="text-sm">
-            <span className="font-semibold">Nên tránh: </span>
-            {sendTime.avoid}
-          </p>        </div>
+        </div>
       )}
     </section>
   );

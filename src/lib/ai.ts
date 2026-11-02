@@ -30,6 +30,9 @@ export function errorResponse(error: unknown) {
       { status: 400 },
     );
   }
+  if (error instanceof SyntaxError) {
+    return NextResponse.json({ error: "Dữ liệu gửi lên không phải JSON hợp lệ", code: "validation" }, { status: 400 });
+  }
   console.error(error);
   return NextResponse.json(
     { error: "Dịch vụ AI đang gặp sự cố hoặc phản hồi không hợp lệ. Vui lòng thử lại sau ít phút.", code: "ai" },
