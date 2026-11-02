@@ -6,7 +6,6 @@ import {
   Heading,
   Hr,
   Html,
-  Preview,
   Section,
   Text,
 } from "@react-email/components";
@@ -109,7 +108,6 @@ export default function CampaignEmail({ brand, brandColor, email }: CampaignEmai
   return (
     <Html lang="vi">
       <Head />
-      <Preview>{email.preheader}</Preview>
       <Body style={{ backgroundColor: "#f4f4f5", margin: 0, padding: "24px 0", fontFamily: "Arial, Helvetica, sans-serif" }}>
         <Container style={{ maxWidth: 600, backgroundColor: "#ffffff", borderRadius: 8, overflow: "hidden" }}>
           <Header brand={brand} brandColor={brandColor} style={email.header} />

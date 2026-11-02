@@ -20,7 +20,7 @@ export default function SendTimePanel({
 
   return (
     <section aria-labelledby="send-time-title" className="bg-paper">
-      <h2 id="send-time-title" className="border-b border-rule bg-sheet px-4 py-2 font-channel text-base font-bold tracking-wide">
+      <h2 id="send-time-title" className="flex h-12 items-center border-b border-rule bg-sheet px-4 font-channel text-base font-bold tracking-wide">
         Giờ gửi gợi ý{sendTime ? ` · ${sendTime.industry}` : ""}
       </h2>
       {error ? (

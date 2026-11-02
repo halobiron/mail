@@ -21,7 +21,7 @@ export async function POST(req: Request) {
         describeCampaign(input),
         "",
         "Viết đúng 3 mẫu email chiến dịch, mỗi mẫu theo một hướng tiếp cận khác nhau rõ rệt (ví dụ: lợi ích, câu chuyện, thúc đẩy hành động).",
-        "Mỗi mẫu gồm đúng ba phần: subject (tiêu đề email), blocks (phần nội dung, các khối từ trên xuống) và cta (chữ trên đúng một nút kêu gọi hành động). Kèm angle, preheader và header (kiểu đầu thư).",
+        "Mỗi mẫu gồm đúng ba phần: subject (tiêu đề email), blocks (phần nội dung, các khối từ trên xuống) và cta (chữ trên đúng một nút kêu gọi hành động). Kèm angle và header (kiểu đầu thư).",
         "Các loại khối nội dung: heading (tiêu đề lớn), text (đoạn văn), list (danh sách ý ngắn), offer (khung nổi bật cho ưu đãi, có label nhỏ phía trên), divider (đường kẻ), note (ghi chú nhỏ như thời hạn, điều kiện đã có trong ưu đãi). Nút không phải là khối: chỉ viết chữ của nút vào cta, mỗi mẫu đúng một nút nằm cuối email.",
         "Ba mẫu phải khác nhau cả về cấu trúc khối và kiểu đầu thư, không chỉ khác chữ: ví dụ một mẫu dùng khung ưu đãi và danh sách, một mẫu kể chuyện bằng vài đoạn văn, một mẫu ngắn gọn thúc đẩy hành động. Chỉ dùng list, offer, divider, note khi nội dung thật sự cần.",
         "Kiểu đầu thư (header): ba mẫu dùng ba kiểu khác nhau là banner, plain và center, mỗi kiểu đúng một lần.",

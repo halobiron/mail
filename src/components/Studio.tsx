@@ -121,7 +121,7 @@ export default function Studio() {
 
       <div className="grid min-h-0 lg:grid-cols-[300px_380px_1fr]">
         <aside className={`${pane("form")} min-h-0 flex-col border-r border-rule bg-paper`}>
-          <h2 className="border-b border-rule bg-sheet px-5 py-2 font-channel text-base font-bold tracking-wide">Chiến dịch</h2>
+          <h2 className="flex h-12 items-center border-b border-rule bg-sheet px-5 font-channel text-base font-bold tracking-wide">Chiến dịch</h2>
           <CampaignForm value={form} onChange={setForm} onSubmit={generate} loading={loading} />
         </aside>
 

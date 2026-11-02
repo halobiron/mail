@@ -5,7 +5,6 @@ import { editOutputSchema, editRequestSchema, type EditField } from "@/lib/schem
 
 const FIELD_RULES: Record<EditField, { label: string; rule: string; singleLine: boolean }> = {
   subject: { label: "tiêu đề email", rule: "Một dòng, tối đa khoảng 60 ký tự.", singleLine: true },
-  preheader: { label: "dòng xem trước (preheader)", rule: "Một dòng ngắn, bổ sung cho tiêu đề chứ không lặp lại.", singleLine: true },
   heading: { label: "tiêu đề lớn trong thân email", rule: "Một dòng ngắn.", singleLine: true },
   text: { label: "một đoạn văn trong thân email", rule: "Giữ là một đoạn văn.", singleLine: false },
   listItem: { label: "một ý trong danh sách", rule: "Một ý ngắn, một dòng, không có ký hiệu đầu dòng.", singleLine: true },

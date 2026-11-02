@@ -95,7 +95,8 @@ components:
   panel-header:
     backgroundColor: "{colors.sheet}"
     typography: "{typography.panel-title}"
-    padding: "8px 16px"
+    height: "48px"
+    padding: "0 16px"
 ---
 
 # Design System: Email Campaign Studio
@@ -167,7 +168,7 @@ Palette chính là navy và giấy lịch, với hai nhóm nhấn có nghĩa h�
 
 ## Layout
 
-Khung là lưới `h-dvh` với hàng header 48px và vùng làm việc chiếm phần còn lại. Từ lg: ba cột `300px | 380px | 1fr`, ngăn nhau bằng kẻ mảnh; cột giữa xếp hộp thư rồi bảng giờ gửi và tự cuộn. Khung đọc: thanh công cụ (copy, viết lại theo tông) phía trên, xem trước email trong khung giấy rộng tối đa 680px trên nền sheet.
+Khung là lưới `h-dvh` với hàng header 48px và vùng làm việc chiếm phần còn lại. Từ lg: ba cột `300px | 380px | 1fr`, ngăn nhau bằng kẻ mảnh; cột giữa xếp hộp thư rồi bảng giờ gửi và tự cuộn. Khung đọc: thanh trên cao 48px (kênh, copy) cùng hàng với tiêu đề hai cột kia, xem trước email trong khung giấy trải hết bề ngang cột; tiêu đề thư kéo dãn sát khung, thân thư giữ rộng 600px căn giữa như Gmail hiển thị; tiêu đề thư nằm ở đầu khung giấy như tiêu đề của một thư thật, sửa được ngay tại chỗ.
 
 Dưới lg chỉ một khu vực hiện cùng lúc (Chiến dịch / Hộp thư / Email), chuyển bằng thanh tab 3 cột cao 48px cố định dưới đáy. Nhịp khoảng cách theo bậc 4px: 8 (tiêu đề panel dọc, gap nút), 12 (gap dòng thư), 16 (padding panel, dòng), 20 (padding form). Trang không cuộn dọc; chỉ các panel bên trong cuộn, thanh cuộn mảnh (`.scroll`).
 
@@ -201,7 +202,7 @@ Viền 1px `rule-strong`, nền trắng, padding 8px 12px, chữ 14px, placehold
 Ô vuông 34px (36px trong khung đọc) nền màu kênh, chữ cái Barlow Condensed 20px/700 màu trắng. Khi chưa có kết quả, ô ở độ mờ 25% (40% khi đang viết).
 
 ### Inbox Row
-Lưới `34px | 1fr`, gap 12px, padding 12px 16px, ngăn bằng kẻ `rule`. Ba dòng: tiêu đề (14px/600), thương hiệu · góc tiếp cận, preheader (12px ink-soft), đều cắt một dòng. Đang chọn: nền vàng nhạt; hover: nền sheet. Xuất hiện lần lượt, lệch 70ms, bằng `air-in` (280ms, ease-out, trượt 6px).
+Lưới `34px | 1fr`, gap 12px, padding 12px 16px, ngăn bằng kẻ `rule`. Hai dòng: tiêu đề (14px/600), thương hiệu · góc tiếp cận (12px ink-soft), đều cắt một dòng. Đang chọn: nền vàng nhạt; hover: nền sheet. Xuất hiện lần lượt, lệch 70ms, bằng `air-in` (280ms, ease-out, trượt 6px).
 
 ### Send-Time Grid
 Bảng 7 cột ngày (T2..CN) và các hàng 2 giờ, ô cao 20px, khe 1px nền `rule`. Ô nằm trong khung gợi ý: nền vàng; còn lại trắng. Nhãn giờ Barlow Condensed 12px. Dưới bảng là chú giải: chấm vuông vàng 12px kèm ngày, giờ, lý do.

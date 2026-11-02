@@ -142,7 +142,7 @@ export default function ReadingPane({
 
   return (
     <div className="flex min-h-0 flex-1 flex-col">
-      <div className="flex flex-wrap items-center gap-2 border-b border-rule bg-paper p-4">
+      <div className="flex min-h-12 flex-wrap items-center gap-2 border-b border-rule bg-sheet px-4 py-1.5">
         <span className={`${channel.bg} flex h-9 w-9 items-center justify-center font-channel text-xl font-bold text-white`} aria-hidden>
           {channel.letter}
         </span>
@@ -177,13 +177,8 @@ export default function ReadingPane({
         )}
       </div>
 
-      <div className="grid gap-x-4 gap-y-1 border-b border-rule bg-paper px-4 pb-3 pt-2 md:grid-cols-2">
-        <Field label="Tiêu đề" field="subject" value={email.subject} ask={ask} onChange={(v, c) => onEdit({ ...email, subject: v }, c)} />
-        <Field label="Dòng xem trước" field="preheader" value={email.preheader} ask={ask} onChange={(v, c) => onEdit({ ...email, preheader: v }, c)} />
-      </div>
-
       <div className="flex min-h-0 flex-1 flex-col bg-sheet p-4 md:px-6 md:pb-4 md:pt-3">
-        <div className="mx-auto mb-3 w-full max-w-[680px]">
+        <div className="mb-3 w-full">
           <BlockBar
             email={email}
             selected={selected}
@@ -198,7 +193,18 @@ export default function ReadingPane({
             }}
           />
         </div>
-        <div className="mx-auto flex min-h-[320px] min-w-0 max-w-[680px] flex-1 flex-col border border-rule bg-paper md:w-full">
+        <div className="flex min-h-[320px] w-full min-w-0 flex-1 flex-col border border-rule bg-paper">
+          <div className="border-b border-rule px-6 pb-1 pt-4">
+            <Field
+              inline
+              label="Tiêu đề thư"
+              field="subject"
+              value={email.subject}
+              ask={ask}
+              meta={`Từ: ${input.brand}`}
+              onChange={(v, c) => onEdit({ ...email, subject: v }, c)}
+            />
+          </div>
           <InlineEmail
             html={html}
             error={renderError}

@@ -17,7 +17,7 @@ export default function Inbox({
 }) {
   return (
     <section aria-label="Hộp thư 3 mẫu" className="border-b border-rule bg-paper">
-      <h2 className="border-b border-rule bg-sheet px-4 py-2 font-channel text-base font-bold tracking-wide">
+      <h2 className="flex h-12 items-center border-b border-rule bg-sheet px-4 font-channel text-base font-bold tracking-wide">
         Hộp thư · 3 kênh
       </h2>
       {!emails ? (
@@ -52,11 +52,10 @@ export default function Inbox({
                     {c.letter}
                   </span>
                   <span className="min-w-0">
-                    <span className="block truncate text-sm font-semibold">{e.subject}</span>
+                    <span className="line-clamp-2 text-sm font-semibold">{e.subject}</span>
                     <span className="block truncate text-xs text-ink-soft">
                       {input?.brand} · {e.angle}
                     </span>
-                    <span className="block truncate text-xs text-ink-soft">{e.preheader}</span>
                   </span>
                 </button>
               </li>

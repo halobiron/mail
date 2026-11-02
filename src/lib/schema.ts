@@ -61,7 +61,6 @@ export type Block = z.infer<typeof blockSchema>;
 export const emailSchema = z.object({
   angle: z.string().describe("Hướng tiếp cận của mẫu, tối đa 6 từ"),
   subject: z.string().describe("Tiêu đề email, tối đa khoảng 60 ký tự"),
-  preheader: z.string().describe("Dòng xem trước hiển thị cạnh tiêu đề trong hộp thư"),
   header: z.enum(Object.keys(HEADER_STYLES) as [HeaderStyle, ...HeaderStyle[]]).describe("Kiểu đầu thư"),
   blocks: z.array(blockSchema).min(1).max(MAX_BLOCKS).describe("Các khối nội dung theo thứ tự từ trên xuống, không gồm nút"),
   cta: z.string().describe("Chữ trên nút kêu gọi hành động duy nhất của email, tối đa 5 từ"),
@@ -116,7 +115,7 @@ export const rewriteRequestSchema = z
   })
   .refine((v) => v.tone || v.instruction, { message: "Cần chọn tông hoặc nhập yêu cầu chỉnh sửa" });
 
-export const EDIT_FIELDS = ["subject", "preheader", "heading", "text", "listItem", "offerLabel", "offerText", "cta", "note"] as const;
+export const EDIT_FIELDS = ["subject", "heading", "text", "listItem", "offerLabel", "offerText", "cta", "note"] as const;
 export type EditField = (typeof EDIT_FIELDS)[number];
 
 export const editRequestSchema = z.object({

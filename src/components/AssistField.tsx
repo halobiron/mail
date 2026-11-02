@@ -21,6 +21,8 @@ export function Field({
   onChange,
   ask,
   actions,
+  inline,
+  meta,
 }: {
   label: string;
   field: EditField;
@@ -29,6 +31,10 @@ export function Field({
   onChange: (value: string, commit: boolean) => void;
   ask: Ask;
   actions?: React.ReactNode;
+  /** Tiêu đề thư: chữ lớn không khung, hiện viền nét đứt khi rê chuột như các phần chữ trong thân email. */
+  inline?: boolean;
+  /** Dòng phụ bên trái nút "Nhờ AI chỉnh" (chỉ dùng với inline). */
+  meta?: React.ReactNode;
 }) {
   const ref = useRef<HTMLTextAreaElement & HTMLInputElement>(null);
   const session = useRef(false);
@@ -96,26 +102,32 @@ export function Field({
     onSelect: syncSelection,
     onKeyUp: syncSelection,
     onMouseUp: syncSelection,
-    className: `${control} ${multiline ? "resize-none overflow-hidden leading-relaxed" : ""}`,
+    className: inline
+      ? "-mx-1 w-[calc(100%+0.5rem)] border border-transparent bg-transparent px-1 py-0.5 text-lg font-semibold leading-snug text-ink hover:border-dashed hover:border-rule-strong"
+      : `${control} ${multiline ? "resize-none overflow-hidden leading-relaxed" : ""}`,
     "aria-label": label,
   };
 
   return (
     <div>
-      <div className="mb-1 flex min-h-8 items-center gap-1">
-        <span className="mr-auto text-xs font-semibold">{label}</span>
-        {actions}
-        <button
-          type="button"
-          aria-expanded={show}
-          disabled={busy}
-          onClick={() => setOpen((o) => !o)}
-          className={textBtn}
-        >
-          Nhờ AI chỉnh
-        </button>
-      </div>
+      {!inline && (
+        <div className="mb-1 flex min-h-8 items-center gap-1">
+          <span className="mr-auto text-xs font-semibold">{label}</span>
+          {actions}
+          <button type="button" aria-expanded={show} disabled={busy} onClick={() => setOpen((o) => !o)} className={textBtn}>
+            Nhờ AI chỉnh
+          </button>
+        </div>
+      )}
       {multiline ? <textarea rows={2} {...shared} /> : <input type="text" {...shared} />}
+      {inline && (
+        <div className="mt-0.5 flex min-h-8 items-center gap-1">
+          <span className="mr-auto min-w-0 truncate text-xs text-ink-soft">{meta}</span>
+          <button type="button" aria-expanded={show} disabled={busy} onClick={() => setOpen((o) => !o)} className={textBtn}>
+            Nhờ AI chỉnh
+          </button>
+        </div>
+      )}
 
       {show && (
         <div ref={toolbar} className="mt-2 border border-rule bg-sheet p-3">
