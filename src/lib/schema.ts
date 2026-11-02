@@ -14,17 +14,6 @@ export const TONES = {
 } as const;
 export type Tone = keyof typeof TONES;
 
-/** Rỗng là hợp lệ; còn lại chỉ nhận http(s) để không đưa javascript:, data: vào href của email. */
-function isHttpUrl(value: string) {
-  if (!value) return true;
-  try {
-    const { protocol } = new URL(value);
-    return protocol === "http:" || protocol === "https:";
-  } catch {
-    return false;
-  }
-}
-
 const goalEnum = z.enum(Object.keys(GOALS) as [Goal, ...Goal[]], "Mục tiêu chiến dịch không hợp lệ");
 const toneEnum = z.enum(Object.keys(TONES) as [Tone, ...Tone[]], "Tông viết không hợp lệ");
 
@@ -33,13 +22,6 @@ export const campaignInputSchema = z.object({
   brand: z.string().trim().min(1, "Nhập tên thương hiệu").max(80, "Tên thương hiệu tối đa 80 ký tự"),
   industry: z.string().trim().max(80, "Ngành hàng tối đa 80 ký tự").optional().default(""),
   offer: z.string().trim().min(1, "Nhập nội dung ưu đãi").max(1000, "Nội dung ưu đãi tối đa 1000 ký tự"),
-  ctaUrl: z
-    .string()
-    .trim()
-    .max(500, "Link nút CTA tối đa 500 ký tự")
-    .refine(isHttpUrl, "Link nút CTA phải bắt đầu bằng http:// hoặc https://")
-    .optional()
-    .default(""),
   brandColor: z.string().regex(/^#[0-9a-fA-F]{6}$/, "Màu thương hiệu phải có dạng #RRGGBB"),
 });
 export type CampaignInput = z.infer<typeof campaignInputSchema>;

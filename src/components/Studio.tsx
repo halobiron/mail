@@ -20,7 +20,6 @@ const EMPTY_INPUT: CampaignInput = {
   brand: "",
   industry: "",
   offer: "",
-  ctaUrl: "",
   brandColor: "#101b3d",
 };
 

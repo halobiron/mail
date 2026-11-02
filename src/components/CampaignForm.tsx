@@ -99,17 +99,6 @@ export default function CampaignForm({
           />
         </label>
 
-        <label className="block">
-          <span className="mb-1 block text-xs font-semibold">Link nút CTA (không bắt buộc)</span>
-          <input
-            type="url"
-            className={input}
-            value={value.ctaUrl}
-            onChange={(e) => set("ctaUrl", e.target.value)}
-            placeholder="https://"
-          />
-        </label>
-
         <label className="flex items-center gap-3">
           <input
             type="color"

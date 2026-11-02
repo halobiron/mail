@@ -13,7 +13,7 @@ export type RewriteOptions = { tone?: Tone; instruction?: string };
 
 type Rendered = { html: string; text: string };
 
-function plainCopy(email: Email, ctaUrl: string) {
+function plainCopy(email: Email) {
   const lines = email.blocks.flatMap((b) => {
     switch (b.type) {
       case "list":
@@ -26,7 +26,7 @@ function plainCopy(email: Email, ctaUrl: string) {
         return [b.text, ""];
     }
   });
-  return [`Tiêu đề: ${email.subject}`, "", ...lines, `[${email.cta}]${ctaUrl ? ` ${ctaUrl}` : ""}`].join("\n");
+  return [`Tiêu đề: ${email.subject}`, "", ...lines, `[${email.cta}]`].join("\n");
 }
 
 const chip = "h-8 shrink-0 border border-rule-strong bg-paper px-3 text-sm font-medium hover:bg-onair-soft disabled:opacity-50";
@@ -96,11 +96,22 @@ export default function ReadingPane({
 
   async function copy(kind: "text" | "html") {
     try {
-      const text =
-        kind === "text"
-          ? plainCopy(latest.current.email, input.ctaUrl)
-          : (await postJson<Rendered>("/api/render", { input, email: latest.current.email })).html;
-      await navigator.clipboard.writeText(text);
+      if (kind === "text") {
+        await navigator.clipboard.writeText(plainCopy(latest.current.email));
+      } else {
+        const { html } = await postJson<Rendered>("/api/render", { input, email: latest.current.email });
+        // Ghi cả text/html (để dán vào Gmail ra email định dạng, có nút) lẫn text/plain (để dán vào trình soạn mã ra mã nguồn).
+        if (typeof ClipboardItem === "undefined") {
+          await navigator.clipboard.writeText(html);
+        } else {
+          await navigator.clipboard.write([
+            new ClipboardItem({
+              "text/html": new Blob([html], { type: "text/html" }),
+              "text/plain": new Blob([html], { type: "text/plain" }),
+            }),
+          ]);
+        }
+      }
       setMessage(null);
       setCopied(kind);
       setTimeout(() => setCopied(null), 2000);

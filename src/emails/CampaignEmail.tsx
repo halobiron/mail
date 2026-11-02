@@ -15,7 +15,6 @@ import type { Block, Email } from "@/lib/schema";
 export interface CampaignEmailProps {
   brand: string;
   brandColor: string;
-  ctaUrl: string;
   email: Email;
 }
 
@@ -106,7 +105,7 @@ function Header({ brand, brandColor, style }: { brand: string; brandColor: strin
   );
 }
 
-export default function CampaignEmail({ brand, brandColor, ctaUrl, email }: CampaignEmailProps) {
+export default function CampaignEmail({ brand, brandColor, email }: CampaignEmailProps) {
   return (
     <Html lang="vi">
       <Head />
@@ -118,7 +117,7 @@ export default function CampaignEmail({ brand, brandColor, ctaUrl, email }: Camp
             {email.blocks.map((b, i) => renderBlock(b, i, brandColor))}
             <Section style={{ margin: "0 0 16px" }}>
               <Button
-                href={ctaUrl || "#"}
+                href="#"
                 style={{
                   backgroundColor: brandColor,
                   color: "#ffffff",
