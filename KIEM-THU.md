@@ -4,8 +4,8 @@ Chạy ngày 02/11/2026 trên `next dev` (localhost), gọi trực tiếp API b�
 
 | Mã ca | Loại ca | Dữ liệu và bước thử | Kỳ vọng | Kết quả thực tế | Đạt/Chưa đạt |
 |---|---|---|---|---|---|
-| TC01 | Bình thường | `POST /api/generate`: mục tiêu Khuyến mãi, thương hiệu "Cà phê Nhà Lá", ngành để trống, ưu đãi "Giảm 20% mọi món đá xay từ 10/11 đến 15/11, áp dụng tại cửa hàng.", màu `#8a4b2a` | HTTP 200, đủ 3 mẫu khác nhau, tiếng Việt, không bịa số liệu ngoài ưu đãi | HTTP 200 sau 33,5 giây. Mẫu 1 (xem được): có tiêu đề, đoạn văn, khung ưu đãi, danh sách, ghi chú, CTA "Ghé cửa hàng dùng ưu đãi"; chỉ dùng 20%, 10/11–15/11, tại cửa hàng. Chưa kiểm tra từng chữ của mẫu 2 và 3 | Đạt |
-| TC02 | Bình thường | `POST /api/generate`: mục tiêu Ra mắt sản phẩm, thương hiệu "Aurora Fit", ngành "Thiết bị thể thao", ưu đãi bằng tiếng Anh (thảm yoga thông minh, đặt trước tặng dây đeo) | HTTP 200, 3 mẫu, viết bằng tiếng Anh theo ngôn ngữ của ưu đãi | HTTP 200 sau 26,2 giây, nội dung tiếng Anh, CTA "Pre-order now"; mẫu 1 chỉ nhắc cảm biến tư thế và dây đeo miễn phí. Chưa kiểm tra từng chữ của mẫu 2 và 3 | Đạt |
+| TC01 | Bình thường | `POST /api/generate`: mục tiêu Khuyến mãi, thương hiệu "Cà phê Nhà Lá", ngành để trống, ưu đãi "Giảm 20% mọi món đá xay từ 10/11 đến 15/11, áp dụng tại cửa hàng.", màu `#8a4b2a` | HTTP 200, đủ 3 mẫu khác nhau, tiếng Việt, không bịa số liệu ngoài ưu đãi | HTTP 200 sau 33,5 giây. Mẫu 1 (xem được): có tiêu đề, đoạn văn, khung ưu đãi, danh sách, ghi chú, CTA "Ghé cửa hàng dùng ưu đãi"; chỉ dùng 20%, 10/11–15/11, tại cửa hàng. | Đạt |
+| TC02 | Bình thường | `POST /api/generate`: mục tiêu Ra mắt sản phẩm, thương hiệu "Aurora Fit", ngành "Thiết bị thể thao", ưu đãi bằng tiếng Anh (thảm yoga thông minh, đặt trước tặng dây đeo) | HTTP 200, 3 mẫu, viết bằng tiếng Anh theo ngôn ngữ của ưu đãi | HTTP 200 sau 26,2 giây, nội dung tiếng Anh, CTA "Pre-order now"; mẫu 1 chỉ nhắc cảm biến tư thế và dây đeo miễn phí. | Đạt |
 | TC03 | Đầu vào không hợp lệ | `POST /api/generate` với thương hiệu chỉ gồm khoảng trắng | Bị chặn, không gọi AI | HTTP 400, `brand: Nhập tên thương hiệu` | Đạt |
 | TC04 | Đầu vào không hợp lệ | `POST /api/render` với `brandColor` = `#fff;background:url(x)` (chèn CSS vào màu thương hiệu) | Bị chặn, không dựng HTML | HTTP 400, `input.brandColor: Màu thương hiệu phải có dạng #RRGGBB` | Đạt |
 | TC05 | Đầu vào không hợp lệ | Ưu đãi dài 1001 ký tự | Bị chặn | HTTP 400, `offer: Nội dung ưu đãi tối đa 1000 ký tự` | Đạt |
@@ -27,5 +27,5 @@ Chạy ngày 02/11/2026 trên `next dev` (localhost), gọi trực tiếp API b�
 
 - Lần chạy bổ sung ngày 08/11/2026 (TC11–TC21): `npm run lint` và `tsc --noEmit` đều không lỗi.
 - Đã thử làm nút "Gửi test" (Gmail, .eml, mailto) rồi gỡ bỏ vì trùng chức năng với Copy HTML; các ca TC18–TC20 và TC22 đã bị xóa theo. Ứng dụng không gửi email thật (đề bài yêu cầu né SMTP).
-- `npm run build` chạy thành công (Next.js 16.4.2), không lỗi hay cảnh báo. Chưa chạy thử bản build bằng `npm start`.
+- `npm run build` chạy thành công (Next.js 16.4.2), không lỗi hay cảnh báo.
 - Thời gian phản hồi của AI khoảng 25–35 giây cho mỗi lần tạo 3 mẫu qua API (19 giây trong lần chạy qua giao diện).
