@@ -6,6 +6,6 @@ export const CHANNELS = [
 ] as const;
 
 export const btnBase =
-  "inline-flex h-9 items-center justify-center gap-2 px-4 text-sm font-semibold transition-colors disabled:opacity-50";
+  "inline-flex h-9 items-center whitespace-nowrap justify-center gap-2 px-4 text-sm font-semibold transition-colors disabled:opacity-50";
 export const btnPrimary = `${btnBase} bg-shell text-white hover:bg-[#1c2c5e]`;
 export const btnOutline = `${btnBase} border border-shell bg-paper text-shell hover:bg-onair-soft`;

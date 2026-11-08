@@ -82,7 +82,9 @@ export default function BlockBar({
       </div>
 
       <div className="flex flex-wrap items-center justify-end gap-x-1 gap-y-1">
-        <p className="mr-auto hidden text-sm text-ink-soft min-[1700px]:block">Bấm vào chữ để sửa. Bôi đen để nhờ AI chỉnh riêng đoạn đó.</p>
+        <p className="mr-auto text-sm font-semibold text-shell">
+          Các vùng nét đứt trong thư là ô điền: bấm vào để gõ, bôi đen để nhờ AI chỉnh riêng đoạn đó.
+        </p>
         <button type="button" className={action} disabled={!hasSel || at === 0} onClick={() => move(-1)}>
           Lên
         </button>

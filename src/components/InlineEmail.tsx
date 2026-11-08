@@ -15,8 +15,8 @@ const PANEL_H = 200;
 
 /** Kiểu cho phần chữ sửa được bên trong email: viền nét đứt khi rê chuột, viền xanh khi đang sửa, nét đứt xanh cho khối đang chọn. */
 const FRAME_CSS = `
-[data-part]{cursor:text}
-[data-part]:hover{outline:1px dashed #aeb8cd;outline-offset:3px}
+[data-part]{cursor:text;outline:1px dashed #cbd2e1;outline-offset:3px;background:rgba(43,80,232,.04)}
+[data-part]:hover{outline:1px dashed #2b50e8;outline-offset:3px;background:rgba(43,80,232,.08)}
 [data-part]:focus{outline:2px solid #2b50e8;outline-offset:3px}
 [data-selected]:not(:focus){outline:2px dashed #2b50e8;outline-offset:4px}
 ::selection{background:#ffd23f;color:#101b3d}
@@ -89,7 +89,9 @@ export default function InlineEmail({
   onHold,
   onNotice,
   onFocusBlock,
+  device = "desktop",
 }: {
+  device?: "desktop" | "mobile";
   html: string | null;
   error: string | null;
   email: Email;
@@ -114,6 +116,8 @@ export default function InlineEmail({
   const panelFocus = useRef(false);
   const busyRef = useRef(false);
   const caret = useRef<{ target: Target; offset: number } | null>(null);
+  // Vị trí cuộn của email; khung tải lại sau mỗi lần dựng nên phải khôi phục để không nhảy về đầu thư.
+  const scrollTop = useRef(0);
 
   const [sel, setSel] = useState<Selection | null>(null);
   const [custom, setCustom] = useState("");
@@ -288,7 +292,14 @@ export default function InlineEmail({
       if (el.contentEditable !== "plaintext-only") el.contentEditable = "true";
       el.spellcheck = false;
     });
+    doc.defaultView?.scrollTo(0, scrollTop.current);
     markSelected(doc, live.current.selected);
+    // Khối vừa thêm hoặc vừa chọn nằm ngoài tầm nhìn thì cuộn tới đúng mức cần thiết, không cuộn nếu đã thấy.
+    const sb = live.current.selected;
+    if (sb !== null) doc.querySelector(`[data-block="${sb}"]`)?.scrollIntoView({ block: "nearest" });
+    doc.addEventListener("scroll", () => {
+      scrollTop.current = doc.documentElement.scrollTop || doc.body.scrollTop;
+    });
     doc.addEventListener("focusin", (e) => {
       const hit = targetOf(e.target as Node);
       focused.current = !!hit;
@@ -380,7 +391,7 @@ export default function InlineEmail({
           sandbox="allow-same-origin"
           srcDoc={html}
           onLoad={setup}
-          className="min-h-0 w-full flex-1 border-0"
+          className={`min-h-0 w-full flex-1 border-0 ${device === "mobile" ? "max-w-[375px] self-center border-x border-rule-strong shadow-md" : ""}`}
         />
       )}
 

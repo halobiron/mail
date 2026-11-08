@@ -73,7 +73,7 @@ export default function CampaignForm({
 
         <label className="block">
           <span className="mb-1 block text-xs font-semibold">Tên thương hiệu</span>
-          <input required maxLength={80} className={input} value={value.brand} onChange={(e) => set("brand", e.target.value)} />
+          <input required autoFocus maxLength={80} className={input} value={value.brand} onChange={(e) => set("brand", e.target.value)} />
         </label>
 
         <label className="block">

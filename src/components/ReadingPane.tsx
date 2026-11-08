@@ -59,6 +59,7 @@ export default function ReadingPane({
   const [message, setMessage] = useState<{ ok: boolean; text: string } | null>(null);
   const [copied, setCopied] = useState<"text" | "html" | null>(null);
   const [custom, setCustom] = useState("");
+  const [device, setDevice] = useState<"desktop" | "mobile">("desktop");
   const [selected, setSelected] = useState<number | null>(null);
   const [focusRequest, setFocusRequest] = useState<FocusRequest | null>(null);
   const latest = useRef({ input, email });
@@ -155,9 +156,9 @@ export default function ReadingPane({
             {message.text}
           </p>
         )}
-        <div className="ml-auto flex items-center gap-2">
+        <div className="ml-auto flex flex-wrap items-center justify-end gap-2">
           <button
-            className="h-9 px-2 text-sm font-semibold text-ink-soft underline underline-offset-2 hover:text-ink disabled:no-underline disabled:opacity-40"
+            className="h-9 whitespace-nowrap px-2 text-sm font-semibold text-ink-soft underline underline-offset-2 hover:text-ink disabled:no-underline disabled:opacity-40"
             disabled={!canUndo || busy !== null}
             onClick={onUndo}
           >
@@ -178,6 +179,24 @@ export default function ReadingPane({
       </div>
 
       <div className="flex min-h-0 flex-1 flex-col bg-sheet p-4 md:px-6 md:pb-4 md:pt-3">
+        <div className="mb-2 flex items-center gap-2">
+          <span className="text-sm font-semibold">Xem trên</span>
+          <div className="flex border border-rule-strong" role="group" aria-label="Xem trước theo thiết bị">
+            {([["desktop", "Desktop"], ["mobile", "Mobile"]] as const).map(([id, label]) => (
+              <button
+                key={id}
+                aria-pressed={device === id}
+                onClick={() => setDevice(id)}
+                className={`h-8 border-r border-rule-strong px-3 text-sm font-semibold last:border-r-0 ${
+                  device === id ? "bg-onair text-shell" : "bg-paper hover:bg-onair-soft"
+                }`}
+              >
+                {label}
+              </button>
+            ))}
+          </div>
+          {device === "mobile" && <span className="text-xs text-ink-soft">Khung rộng 375px</span>}
+        </div>
         <div className="mb-3 w-full">
           <BlockBar
             email={email}
@@ -212,6 +231,7 @@ export default function ReadingPane({
             ask={ask}
             selected={selected}
             focusRequest={focusRequest}
+            device={device}
             onEdit={onEdit}
             onHold={onHold}
             onNotice={(text) => setMessage({ ok: true, text })}

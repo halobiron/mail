@@ -119,13 +119,13 @@ export default function Studio() {
         )}
       </header>
 
-      <div className="grid min-h-0 lg:grid-cols-[300px_380px_1fr]">
+      <div className={`grid min-h-0 ${result || loading ? "lg:grid-cols-[300px_380px_1fr]" : "lg:grid-cols-[440px_1fr]"}`}>
         <aside className={`${pane("form")} min-h-0 flex-col border-r border-rule bg-paper`}>
           <h2 className="flex h-12 items-center border-b border-rule bg-sheet px-5 font-channel text-base font-bold tracking-wide">Chiến dịch</h2>
           <CampaignForm value={form} onChange={setForm} onSubmit={generate} loading={loading} />
         </aside>
 
-        <section className={`${pane("inbox")} scroll min-h-0 flex-col overflow-y-auto border-r border-rule bg-sheet`}>
+        <section className={`${view === "inbox" ? "flex" : "hidden"} ${result || loading ? "lg:flex" : "lg:hidden"} scroll min-h-0 flex-col overflow-y-auto border-r border-rule bg-sheet`}>
           {error && (
             <p role="alert" className="border-b border-danger/40 bg-[#fdecee] p-4 text-sm text-danger">
               {error}{" "}
@@ -165,8 +165,17 @@ export default function Studio() {
               onUndo={() => undo(active)}
             />
           ) : (
-            <div className="flex flex-1 items-center justify-center p-8 text-center text-sm text-ink-soft">
-              <p className="max-w-xs">Chọn một thư trong hộp thư để đọc, copy hoặc viết lại theo tông khác.</p>
+            <div className="flex flex-1 items-center justify-center gap-4 bg-sheet p-8 text-ink">
+              {loading ? (
+                <p className="text-lg font-semibold">Đang viết 3 mẫu email…</p>
+              ) : (
+                <>
+                  <svg aria-hidden width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="hidden shrink-0 lg:block">
+                    <path d="M20 12H4m0 0 6-6m-6 6 6 6" />
+                  </svg>
+                  <p className="max-w-sm text-lg font-semibold">Bắt đầu bằng việc điền form “Chiến dịch”, rồi bấm “Viết 3 mẫu email”.</p>
+                </>
+              )}
             </div>
           )}
         </main>

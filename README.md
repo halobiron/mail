@@ -15,4 +15,4 @@ npm run dev
 
 ## Phạm vi
 
-Không có cơ sở dữ liệu, danh sách khách hàng hay gửi email. Gợi ý thời điểm gửi do AI suy luận theo ngành, không phải số liệu đo đạc.
+Không có cơ sở dữ liệu, danh sách khách hàng hay gửi email qua SMTP. Muốn đưa email ra ngoài thì dùng "Copy nội dung" hoặc "Copy HTML" rồi dán vào công cụ khác. Gợi ý thời điểm gửi do AI suy luận theo ngành, không phải số liệu đo đạc.

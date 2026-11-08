@@ -1,6 +1,12 @@
 import type { CampaignInput, Email } from "@/lib/schema";
 import { CHANNELS } from "./channels";
 
+function initials(name: string) {
+  const words = name.trim().split(/\s+/).filter(Boolean);
+  const pick = words.length > 1 ? [words[0], words[words.length - 1]] : words;
+  return pick.map((w) => Array.from(w)[0]?.toUpperCase() ?? "").join("") || "?";
+}
+
 /** Danh sách 3 mẫu hiển thị như các dòng thư trong hộp thư; chọn dòng nào thì khung đọc mở thư đó. */
 export default function Inbox({
   input,
@@ -48,14 +54,25 @@ export default function Inbox({
                     on ? "bg-onair-soft" : "bg-paper hover:bg-sheet"
                   }`}
                 >
-                  <span className={`${c.bg} flex h-[34px] w-[34px] items-center justify-center font-channel text-xl font-bold text-white`}>
-                    {c.letter}
+                  <span className="relative h-[34px] w-[34px]">
+                    <span
+                      aria-hidden
+                      style={{ backgroundColor: input?.brandColor }}
+                      className="flex h-[34px] w-[34px] items-center justify-center rounded-full text-sm font-bold text-white"
+                    >
+                      {initials(input?.brand ?? "")}
+                    </span>
+                    <span
+                      className={`${c.bg} absolute -bottom-1 -right-1 flex h-4 w-4 items-center justify-center border border-paper font-channel text-[10px] font-bold leading-none text-white`}
+                    >
+                      {c.letter}
+                    </span>
                   </span>
                   <span className="min-w-0">
-                    <span className="line-clamp-2 text-sm font-semibold">{e.subject}</span>
-                    <span className="block truncate text-xs text-ink-soft">
+                    <span className="block truncate text-xs font-semibold text-ink-soft">
                       {input?.brand} · {e.angle}
                     </span>
+                    <span className="line-clamp-2 text-sm font-semibold">{e.subject}</span>
                   </span>
                 </button>
               </li>
