@@ -1,7 +1,5 @@
 # Email Campaign Studio — Cuộc thi Vibe Coding 2026
 
-> Các mục dạng `<...>` là thông tin đội còn phải điền trước khi nộp bài.
-
 ## 1. Thông tin chung
 
 | Hạng mục | Nội dung |
@@ -11,7 +9,7 @@
 | Đề bài bốc thăm | Đề số 6 — Trình tạo email marketing bằng AI |
 | Demo online | https://mail-three-jet.vercel.app/ |
 | Video demo (≤ 02 phút) | https://drive.google.com/file/d/1F--0VLwfEWDdjvrKFBuQIgg7rIn34wXe/view?usp=sharing |
-| Source ZIP | https://drive.google.com/file/d/1nMGiwGCmzrefpxWTQmXswqL2NJgDP3X4/view?usp=sharing |
+| Source ZIP | https://drive.google.com/file/d/1qNhzwSWo554f8ni9CBPOnjsCJzec87HP/view?usp=sharing |
 | Minh chứng dùng AI | https://drive.google.com/file/d/1mQPYiJfou-HcwEf_r3C-etByedVN9RE0/view?usp=sharing |
 | Bảng kiểm thử | Mục 11 của README này, và tệp [KIEM-THU.md](KIEM-THU.md) trong ZIP |
 
