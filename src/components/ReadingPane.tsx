@@ -178,7 +178,7 @@ export default function ReadingPane({
         )}
       </div>
 
-      <div className="flex min-h-0 flex-1 flex-col bg-sheet p-4 md:px-6 md:pb-4 md:pt-3">
+      <div className="scroll flex min-h-0 flex-1 flex-col overflow-y-auto bg-sheet p-4 md:px-6 md:pb-4 md:pt-3">
         <div className="mb-2 flex items-center gap-2">
           <span className="text-sm font-semibold">Xem trên</span>
           <div className="flex border border-rule-strong" role="group" aria-label="Xem trước theo thiết bị">
